@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <title>Travel Mate - Pwd reset</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/lineicons.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/weather-icons.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}"/>
+  </head>
+  <body class="bg-gray">
+    <div class="theme-page-section theme-page-section-xl theme-page-section-gray">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">
+            <div class="theme-login">
+              <div class="theme-login-header">
+                <h1 class="theme-login-title">Password Reset</h1>
+                <p class="theme-login-subtitle">Restore your forgotten password</p>
+              </div>
+              <div class="theme-login-box">
+                <div class="theme-login-box-inner">
+                  <p class="theme-login-pwd-reset-text">Enter the email associated with your account in the field below and we'll email you a link to reset your password.</p>
+                  <div class="form-group theme-login-form-group">
+                    <input class="form-control" type="text" placeholder="Email Adress"/>
+                  </div>
+                  <a class="btn btn-uc btn-dark btn-block btn-lg" href="#">Reset Password</a>
+                  <a class="theme-login-pwd-reset-back" href="login.html">Remember the password?</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

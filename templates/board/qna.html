@@ -1,0 +1,111 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block contents %}
+<!--게시판으로 사용--> 
+  <link rel="stylesheet" href="{% static '/css/accordionStyle.css' %}"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>  
+   <style>
+    /* <!--jquery slide 하기 위한 id --> */
+    #panel, #flip {
+      padding: 5px;
+      text-align: center;
+      background-color: #e5eecc;
+      border: solid 1px #c3c3c3;
+    }
+    #panel {
+      background-color: #e5eecc;
+      padding: 50px;
+      display: none;
+    }
+    #qna_content {
+      height: 10em;
+      resize: none;
+    }
+    #qna_content textarea {
+      resize: none;
+      height: 15em;
+    }
+  </style> 
+</head>
+
+<body>
+  <section id="wrapper">
+  <center>
+    <div class="accContainer">
+      <ul class="accordion">
+          {% for faq in faq_list %}
+            <li  class="accorItem">
+              <h3 class="accordionTitle">{{ forloop.counter }}.   {{faq.question}}<span class="accIcon"></span></h3>
+              <div class="accText">{{faq.answer}} </div>
+            </li>
+          {% endfor %}
+      </ul>     
+    </div>
+    <ul class="pagination">
+        {% for i in pagination %}
+          <li>
+            <a href='/board/qna/?page={{i}}'>{{i}}</a>
+          </li>
+        {% endfor %}
+    </ul>
+  </center>
+  </section>
+
+  <div class="theme-page-section theme-page-section-white theme-page-section-lg">
+    <div class="container">
+      <div class="row">
+          <hr>
+        <div class="container col-lg-6 ">
+          <h3>문의사항</h3>
+          <div class="card" style="padding: 20px; border-radius: 15px; margin: 20px auto;">
+            <form class="form-horizontal">
+            {% comment %} <form class=" form-horizontal" action="/board/contact/" method="post"> {% endcomment %}
+              {% csrf_token %}
+              <div class="form-group">
+                <label>Email</label>
+                <div class="form-group theme-login-form-group">
+                  <input class="form-control" type="text" placeholder="연락받을 이메일 주소를 입력해 주세요." name="email" id="email"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>질문 내용</label>
+                <div class="form-group theme-login-form-group">
+                  <textarea class="form-control" type="text" placeholder="문의하실 내용을 입력해 주세요." name="qna_content" id="qna_content"></textarea>
+                </div>
+              </div>
+              <div class="btn_wrap text-center">
+                <button type="button" id="send" class="btn btn-sm btn-primary">전송</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src='{% static "js/accordionScript.js"%}'></script>
+  <script>
+    $('#send').click(function(){
+      sendEmail();      
+    })
+
+    function sendEmail(){
+      var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+      $.ajax({
+              type: "post",
+              url: "/board/contact/",
+              data: {
+                  'email': $('#email').val(),
+                  'qna_content':$("#qna_content").val(),
+                  'csrfmiddlewaretoken':csrftoken              
+              },
+              success: function (res) {
+                  if(res.result == true) {
+                      alert('메일 전송이 완료되었습니다. \n문의하신 내용은 최대한 빠르게 답변드리도록 하겠습니다.');
+                      location.reload();
+                  }
+                  else alert('메일 전송에 실패하였습니다. \n문의사항을 다시 한 번 전송해주시기 바랍니다.');
+              }
+          });
+    }
+  </script>
+  {% endblock %}

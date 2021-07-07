@@ -1,0 +1,501 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+<style>
+.total_score {
+    font-size: 3em;
+  }
+  #total_score{
+    border : none;
+    font-size: 20px;
+  }
+
+  .btn_kakao {
+    background-color: #F2DA01;
+    margin-bottom : 10px
+  }
+</style>
+    <div class="theme-hero-area">
+      <div class="theme-hero-area-bg-wrap">
+        <div class="theme-hero-area-bg" style="background-image:url(https://www.harborparkhotel.com/HarborparkHotel_common/images/homepage/facilities/laundry7.jpg);"></div>
+        <div class="theme-hero-area-mask theme-hero-area-mask-strong"></div>
+        <div class="theme-hero-area-inner-shadow"></div>
+      </div>
+      <div class="theme-hero-area-body">
+        <div class="container">
+          <div class="theme-item-page-header _pt-300 _pb-50 _pt-mob-100 theme-item-page-header-white">
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
+                <div class="theme-item-page-header-body">
+                  <div class="theme-item-page-header-rating">
+                    
+                    <ul class="theme-item-page-header-rating-stars">
+                        <li>
+                          <i class="fa fa-star"></i>
+                        </li>
+                        <li>
+                          <i class="fa fa-star"></i>
+                        </li>
+                        <li>
+                          <i class="fa fa-star"></i>
+                        </li>
+                        <li>
+                          <i class="fa fa-star"></i>
+                        </li>
+                        <li>
+                          <i class="fa fa-star"></i>
+                        </li>
+                    </ul>
+
+
+                    <p class="theme-item-page-header-rating-title">총 리뷰 {{ review_num }}개</p>
+                  </div>
+                  <h1 class="theme-item-page-header-title _ff-d _fw-200">{{ laundry.laundry_name }}</h1>
+                  <div class="theme-item-page-header-price theme-item-page-header-price-xl">
+                    <p class="theme-item-page-header-price-body">
+                      <b>₩{{ D_price }}~</b>
+                      <span>/ 1회, 기본</span>
+                    </p>
+                  </div>
+                  <ul class="theme-breadcrumbs">
+                    <li>
+                      <p class="theme-breadcrumbs-item-title">
+                        <b>{{ laundry.laundry_address}} <br> {{ laundry.laundry_road }}</b>
+                      </p>
+                    </li>
+                  </ul>
+                  <a class="btn _tt-uc _ls-0 _mt-30 _p-15 magnific-gallery-link btn-default btn-white" data-items={{laundry.laundry_img}},{{laundry.laundry_img}} href="#">
+                    <i class="btn-icon fa fa-camera"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="theme-page-section _pv-0">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+            <div class="row row-col-static row-eq-height row-col-border" id="sticky-parent" data-gutter="60">
+              <div class="col-md-8 ">
+                <!-- 상세 설명 -->
+                <div class="theme-item-page-details _pv-45 theme-item-page-details-first-nm">
+                  <div class="theme-item-page-details-section">
+                    <div class="row">
+                      <div class="col-md-3 ">
+                        <h5 class="theme-item-page-details-section-title">상세 설명</h5>
+                      </div>
+                      <div class="col-md-9 ">
+                        <div class="theme-item-page-desc">
+                          <p>안녕하세요!</p> 
+                          <p>이토록 쉽고도 멋진 세탁 FLaundry 입니다!</p>
+                          <p>FLaundry는 현금 없는 카드결제 서비스를 제공합니다.</p>
+                          <p>평소에 사용하던 신용카드, 체크카드, 삼성페이로 간편하게 결제하세요🙋🙋‍♂🙋‍♀</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="theme-item-page-details-section">
+                    <div class="row">
+                      <div class="col-md-3 ">
+                        <h5 class="theme-item-page-details-section-title">세탁기 사용요금</h5>
+                      </div>
+                      <div class="col-md-9 ">
+                        <div class="row">
+                          <div class="col-md-6 ">
+                            <ul class="theme-item-page-details-list">
+                              <li>20kg</li>
+                          <li><input type="radio" name="laundry" class="laundry1"  value="{{ D_price }}">표준세탁 :
+                            ₩{{ D_price }}</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="5000">표준온수세탁 : ₩5,000</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="5000">향균세탁 : ₩5,000</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="5000">향균온수세탁 : 5,000</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="5000">산소계표백세탁 : ₩5,000</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="5500">산소계표백온수세탁 : ₩5,500</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="6500">프리미엄세탁 : ₩6,500</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="4000">쾌속세탁 : ₩4,000</li>
+                          <label>추가 옵션</label>
+                          <li><input type="radio" name="laundry-option"  class="laundry-option"
+                              value="1000">추가헹굼 : ₩1,000</li>
+                          <li><input type="radio" name="laundry-option" class="laundry-option" value="500">세탁통향균세척 :
+                            ₩500</li>
+                            </ul>
+                          </div>
+                          <div class="col-md-6 ">
+                            <ul class="theme-item-page-details-list">
+                              <li>28kg</li>
+                              <li><input type="radio" name="laundry" class="laundry1" value="6500">표준세탁 : ₩6,500</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="7000">표준온수세탁 : ₩7,000</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="7000">향균세탁 : ₩7,000</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="7000">향균온수세탁 : 7,000</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="7000">산소계표백세탁 : ₩7,000</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="7500">산소계표백온수세탁 : ₩7,500</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="7500">아웃도어세탁 : ₩7,500</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="8500">프리미엄세탁 : ₩8,500</li>
+                          <li><input type="radio" name="laundry" class="laundry1" value="6000">쾌속세탁 : ₩6,000</li>
+                          <label>추가 옵션</label>
+                          <li><input type="radio" name="laundry-option" class="laundry-option" value="1000">추가헹굼 :
+                            ₩1,000</li>
+                          <li><input type="radio" name="laundry-option" class="laundry-option" value="500">세탁통향균세척 :
+                            ₩500</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="theme-item-page-details-section">
+                    <div class="row">
+                      <div class="col-md-3 ">
+                        <h5 class="theme-item-page-details-section-title">건조기 사용요금</h5>
+                      </div>
+                      <div class="col-md-9 ">
+                        <div class="row">
+                          <div class="col-md-6 ">
+                            <ul class="theme-item-page-details-list">
+                              <li>16kg</li>
+                              <li><input type="radio"  class="dryer" name="dryer" value="3500">고온 : ₩3,500
+                          </li>
+                          <li><input type="radio" name="dryer" class="dryer" value="3500">중온 : ₩3,500</li>
+                          <li><input type="radio" name="dryer" class="dryer" value="3500">저온 : ₩3,500</li>
+                            </ul>
+                          </div>
+                          <div class="col-md-6 ">
+                            <ul class="theme-item-page-details-list">
+                              <li>30kg</li>
+                               <li><input type="radio"  class="dryer" name="dryer" value="3500">고온 : ₩3,500
+                          </li>
+                          <li><input type="radio" name="dryer" class="dryer" value="3500">중온 : ₩3,500</li>
+                          <li><input type="radio" name="dryer" class="dryer" value="3500">저온 : ₩3,500</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="theme-item-page-details-section">
+                    <div class="row">
+                      <div class="col-md-3 ">
+                        <h5 class="theme-item-page-details-section-title">편의사항</h5>
+                      </div>
+                      <div class="col-md-9 ">
+                        <div class="row">
+                          <div class="col-md-4 ">
+                            <ul class="theme-item-page-details-list theme-item-page-details-list-checked">
+                              <li>휴식공간</li>
+                              <li>커피머신</li>
+                              <li>TV</li>
+                              <li>Wi-Fi</li>
+                            </ul>
+                          </div>
+                          <div class="col-md-4 ">
+                            <ul class="theme-item-page-details-list theme-item-page-details-list-checked">
+                              <li>에어컨</li>
+                              <li>공기청정기</li>
+                              <li>무인 보관함</li>
+                              <li>빨래 바구니</li>
+                            </ul>
+                          </div>
+                          <div class="col-md-4 ">
+                            <ul class="theme-item-page-details-list theme-item-page-details-list-checked">
+                              <li>카트</li>
+                              <li>휴대폰 충전기</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="theme-item-page-details-section">
+                    <div class="row">
+                      <div class="col-md-3 ">
+                        <h5 class="theme-item-page-details-section-title">위치</h5>
+                      </div>
+                      <div class="col-md-9 ">
+
+                        <!-- <div class="theme-item-page-map google-map" data-lat="40.7483624" data-lng="-73.9900896" data-tab="false"></div> -->
+                        <div id="map" style="width:100%; height:200px;"></div>
+                        <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f56105d065f938ed8ae37254cd5c70ae"></script>
+                        <script>
+                          var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                          mapOption = { 
+                            center: new kakao.maps.LatLng({{laundry.laundry_lat}}, {{laundry.laundry_lng}}), // 지도의 중심좌표
+                            level: 3 // 지도의 확대 레벨
+                          };
+
+                          // 지도를 생성한다 
+                          var map = new kakao.maps.Map(mapContainer, mapOption);
+                          // 지도에 확대 축소 컨트롤을 생성한다
+                          var zoomControl = new kakao.maps.ZoomControl();
+
+                          // 지도의 우측에 확대 축소 컨트롤을 추가한다
+                          map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+                          // 마커가 표시될 위치입니다 
+                          var markerPosition  = new kakao.maps.LatLng({{laundry.laundry_lat}}, {{laundry.laundry_lng}});
+
+                          // 마커를 생성합니다
+                          var marker = new kakao.maps.Marker({
+                            map: map,
+                            position: markerPosition,
+                          });
+
+                          // 마커가 지도 위에 표시되도록 설정합니다
+                          marker.setMap(map);
+
+                        </script>
+                      
+                      </div>
+                    </div>
+                  </div>
+                  <div class="theme-item-page-details-section">
+                    <div class="row">
+                      <div class="col-md-3 ">
+                        <h5 class="theme-item-page-details-section-title">리뷰</h5>
+                      </div>
+                      <div class="col-md-9 ">
+                        <div class="theme-reviews">
+                          <div class="theme-reviews-list">
+                            {% if review %}
+                              {% for r in review %}
+                                <article class="theme-reviews-item">
+                                  <div class="row" data-gutter="10">
+                                    <div class="col-md-3 ">
+                                      <div class="theme-reviews-item-info">
+                                          <img class="theme-reviews-item-avatar" src="{% static '/img/icon.png' %}" alt="Image Alternative text" title="Image Title"/>
+                                          <p class="theme-reviews-item-date">{{r.review_date}}</p>
+                                          <p class="theme-reviews-item-author">{{r.users.user_nick}}</p>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-9 ">
+                                      <div class="theme-reviews-rating">
+                                        <ul class="theme-reviews-rating-stars">
+                                          <li>
+                                            <i class="fa fa-star"></i>
+                                          </li>
+                                          <li>
+                                            <i class="fa fa-star"></i>
+                                          </li>
+                                          <li>
+                                            <i class="fa fa-star"></i>
+                                          </li>
+                                          <li>
+                                            <i class="fa fa-star"></i>
+                                          </li>
+                                          <li>
+                                            <i class="fa fa-star-half-o"></i>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                      <div class="theme-reviews-item-body">
+                                        <p class="theme-reviews-item-text">{{r.review_content}}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </article>
+                              {% endfor %}
+                            {% endif %}
+                            
+                            <div class="row">
+                              <div class="col-md-9 col-md-offset-3">
+                                <a class="theme-reviews-more" href="#">&#x2b; More Reviews</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 ">
+                <div class="sticky-col _pv-45 _mob-h">
+                  <div class="theme-search-area theme-search-area-vert">
+                    <div class="theme-search-area-header _mb-20 theme-search-area-header-sm">
+                      <h1 class="theme-search-area-title">QR결제</h1>
+                      <p class="theme-search-area-subtitle">쉽고 간편하게 결제를 해보세요.</p>
+                    </div>
+                    <div class="theme-search-area-form">
+                      <div class="theme-item-page-summary-price _mb-20">
+                      <form method="post" action="{% url 'user:kakaopay' %}" class="col-12 text-center">
+                        {% csrf_token %}
+                        <p class="theme-item-page-summary-price-total" id="total_cost">총 금액
+                          <input type="text" text-align="center" name="total_score" id="total_score"/>
+                        <button class="theme-search-area-submit _mt-0 _tt-uc theme-search-area-submit-curved btn_kakao">카카오페이로 결제하기</button>
+                      </form>
+                        <button
+                        class="theme-search-area-submit _mt-0 _tt-uc theme-search-area-submit-curved" ><a href="{% url 'user:cards' %}">일반카드결제</a></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="theme-footer" id="mainFooter">
+      <div class="container _ph-mob-0">
+        <div class="row row-eq-height row-mob-full" data-gutter="60">
+          <div style="margin:30px";></div>
+        </div>
+      </div>
+    </div>
+    <div class="theme-copyright">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="theme-copyright-text">Copyright &copy; 2021
+              <a href="https://github.com/HyunCheolNam/miniproject2">Github</a>. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYeBBmgAkyAN_QKjAVOiP_kWZ_eQdadeI&callback=initMap&libraries=places"></script>
+    <script src="js/owl-carousel.js"></script>
+    <script src="js/blur-area.js"></script>
+    <script src="js/icheck.js"></script>
+    <script src="js/gmap.js"></script>
+    <script src="js/magnific-popup.js"></script>
+    <script src="js/ion-range-slider.js"></script>
+    <script src="js/sticky-kit.js"></script>
+    <script src="js/smooth-scroll.js"></script>
+    <script src="js/fotorama.js"></script>
+    <script src="js/bs-datepicker.js"></script>
+    <script src="js/typeahead.js"></script>
+    <script src="js/quantity-selector.js"></script>
+    <script src="js/countdown.js"></script>
+    <script src="js/window-scroll-action.js"></script>
+    <script src="js/fitvid.js"></script>
+    <script src="js/youtube-bg.js"></script>
+    <script src="js/custom.js"></script>
+    <script type="text/javascript">
+  // let total_score = document.getElementById('total_score')
+  // $("input[name='laundry1']:radio").change(function () {
+  //       //라디오 버튼 값을 가져온다.
+  //       var noticeCat = this.value;
+
+  //       console.log(noticeCat);            
+  // });
+
+  //function totalCost() {
+  // let cost1 = $(this).val()
+  let cost1 = 0
+  let cost2 = 0
+  let cost3 = 0
+  let totalCost = 0
+  let score_input = document.getElementById('total_score').value;
+  $(".laundry1").on('click', function () {
+    let text = $(this).parent().text()
+    cost1 = $(this).val()
+    cost1 = parseInt(cost1)
+    cost2 = parseInt(cost2)
+    cost3 = parseInt(cost3)
+
+    //cost1 는 str 타입. integer로 변환해야함
+    console.log(cost1)
+    if (cost2 != 0 && cost3 != 0) {
+      totalCost = cost1 + cost2 + cost3
+    } else if (cost2 != 0 && cost3 == 0) {
+      totalCost = cost1 + cost2
+    } else if (cost2 == 0 && cost3 != 0) {
+      totalCost == cost1 + cost3
+    } else {
+      totalCost = cost1
+    }
+
+    // window.location.href = "주소?" + '값='+ cost1
+    //var total_score = document.getElementById('total_score')
+    $("#total_score").val(totalCost)
+    score_input = totalCost
+    console.log(score_input)
+    
+    // $(total_score).append(`<p>${text} : ${cost1}원</p>`)
+    //html에 코드 추가
+    //$(total_score).html(`<p>총 가격 : ${totalCost}원</p>`)
+    
+    // $(total_score).innerText = `총 가격 : ${totalCost}원`
+    console.log(total_score)
+    // $(total_score) = 
+  })
+
+  $(".laundry-option").on('click', function () {
+    let text = $(this).parent().text()
+    //cost1 는 str 타입. integer로 변환해야함
+    cost2 = $(this).val()
+
+    cost1 = parseInt(cost1)
+    cost2 = parseInt(cost2)
+    cost3 = parseInt(cost3)
+    console.log(typeof (cost1))
+    if (cost1 != 0 && cost3 != 0) {
+      totalCost = cost1 + cost2 + cost3
+    } else if (cost1 != 0 && cost3 == 0) {
+      totalCost = cost1 + cost2
+    } else if (cost1 == 0 && cost3 != 0) {
+      totalCost == cost2 + cost3
+    } else {
+      totalCost = cost2
+    }
+    //$(total_score).html(`<p class="total_cost">총 가격 : ${totalCost}원</p>`)
+    $("#total_score").val(totalCost)
+
+    // $(total_score) = 
+  })
+  
+  $(".dryer").on('click', function () {
+    let text = $(this).parent().text()
+    //cost1 는 str 타입. integer로 변환해야함
+    cost3 = $(this).val()
+
+    cost1 = parseInt(cost1)
+    cost2 = parseInt(cost2)
+    cost3 = parseInt(cost3)
+
+    if (cost1 != 0 && cost2 != 0) {
+      totalCost = cost1 + cost2 + cost3
+    } else if (cost1 != 0 && cost2 == 0) {
+      totalCost = cost1 + cost3
+    } else if (cost1 == 0 && cost2 != 0) {
+      totalCost == cost2 + cost3
+    } else {
+      totalCost = cost3
+    }
+    //$(total_score).html(`<p class="total_cost">총 가격 : ${totalCost}원</p>`)
+    // $(total_score) = 
+    $("#total_score").val(totalCost)
+  })
+
+
+  //카카오페이연결
+  let kakaopay = document.querySelector('.btn_kakao');
+  kakaopay.addEventListener('click', e => {
+    let total_cost = document.getElementById('total_cost')
+    console.log(total_cost)
+    let param = {
+      'total_cost' : total_cost
+    }
+    $.ajax({
+      url : "{% url 'user:kakaopay' %}",
+      type : 'POST',
+      data : JSON.stringify(param),
+      success:function(data) {
+        console.log("성공")
+      }
+      
+
+    })
+  })
+  // $(".laundry").on('click',function() {
+  // })
+    //}
+</script>
+  </body>
+</html>
+{% endblock %}

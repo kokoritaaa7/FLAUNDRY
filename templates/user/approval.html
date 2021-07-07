@@ -1,0 +1,41 @@
+<!--수정자 : 남현철-->
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+<style>
+.user_info{
+  color: skyblue;
+}
+</style>
+<!--카카오 결제 끝나고 나오는 화면-->
+<div class="maindiv">
+  <div class="">
+    <h2 class="title">결제 완료!</h2>
+    <h3 class="user">주문자 정보</h3>
+    <div>
+      <div class="">
+        <div class=""><h3 class="user_info">주문번호</h3></div>
+        <div class="">{{ res.partner_order_id }}</div>
+      </div>
+      <div class="">
+        <div class=""><h3 class="user_info">상품명</h3></div>
+        <div class="">{{ res.item_name }}</div>
+      </div>
+      <div class="">
+        <div class=""><h3 class="user_info">결제금액</h3></div>
+        <div class="">{{ amount }}원</div>
+      </div>
+      <div class="">
+        <div class=""><h3 class="user_info">결제승인시각</h3></div>
+        <div class="">{{ res.approved_at }}</div>
+      </div>
+    </div>
+    <div class="mt-5 pt-3 text-center">
+      <a href="{% url 'board:main'%}" class="btn btn-warning">메인으로 돌아가기</a>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

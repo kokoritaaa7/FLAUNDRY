@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+
+<style>
+  .title_scale {
+    font-weight: bold;
+  }
+
+  #logo-size {
+    height: 50px;
+    padding-left: 6px;
+    padding-bottom: 3px;
+  }
+
+  body {
+    margin-bottom: 15em;
+  }
+
+  #row_margin {
+    padding-bottom: 0px;
+  }
+
+  .theme-search-area-tabs-title-2 {
+    margin-top: 0;
+    line-height: 1em;
+    margin-bottom: 0;
+    font-size: 59px;
+    font-weight: 300px;
+    font-weight: normal;
+  }
+
+  .theme-search-area-tabs {
+    width: 100%
+  }
+  .btn-margin {
+    margin-top: 10px;
+  }
+  .theme-search-area-tabs{
+    width : 100%
+  }
+</style>
+
+    <div class="_pt-90 container _pt-mob-30">
+      <div class="row" id="row_margin">
+        <div class="col-md-5 ">
+            <div>
+                <a class = " lanudry_img"href="{% url 'board:main' %}">
+                    <img src="{% static '/img/FLaundry_Logo_icon.png' %}" alt="Image Alternative text" title="Image Title" id="logo-size" />
+                </a>
+            </div>
+          <div class="theme-search-area-tabs">
+            <div class="theme-search-area-tabs-header">
+              <h2 class="font-Nanum-Gothic">코인 세탁소 위치 찾기</h2>
+              <h3 class="theme-search-area-tabs-subtitle theme-search-area-tabs-subtitle-sm font-Nanum-Gothic">나에게 적절한 코인 세탁소를 찾아보세요.</h3>
+            </div>
+            <div class="tabbable">
+              <ul class="nav nav-tabs nav-lg nav-line nav-default nav-mob-inline" id="slideTabs" role="tablist">
+                <li class="active" role="presentation">
+                  <a aria-controls="SearchAreaTabs-1" role="tab" data-toggle="tab" href="#SearchAreaTabs-1">코인 세탁소 찾기</a>
+                </li>
+              </ul>
+              <div class="tab-content _pt-20">
+                <div class="tab-pane active" id="SearchAreaTabs-1" role="tab-panel">
+                  <div class="theme-search-area theme-search-area-vert">
+                    <div class="theme-search-area-form">
+                      <div class="theme-search-area-section first theme-search-area-section-line">
+                        <div class="theme-search-area-section-inner">
+                          <i class="theme-search-area-section-icon lin lin-location-pin"></i>
+                          <input class="theme-search-area-section-input typeahead" type="text" id="keyword" placeholder="키워드 검색" data-provide="typeahead"/>
+                        </div>
+                      </div>
+                      <div class="row" data-gutter="30">
+                        <div class="col-md-6 btn-margin">
+                          <button class="theme-search-area-submit _mt-20 theme-search-area-submit-curved theme-search-area-submit-primary"
+                          type="submit" onclick="sendInfo()">검색</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 ">
+          <div class="theme-tab-slider _mob-h" id="slideTabsSlides">
+            <!-- 여기부터 추가 -->
+
+            <!-- Parameter Javascript -->
+            <script>
+              function sendInfo(){
+                let userKeyword = $('#keyword').val();
+                window.location.href = "/laundry/search_map?keyword=" + userKeyword;
+              }
+            </script>
+
+            <!-- Kakao Map Javascript -->
+            <div id="map" style="width:500px;height:570px;"></div>
+            <script src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=f56105d065f938ed8ae37254cd5c70ae"></script>
+            <script>
+              // User 주소로 부터 center 지정
+              var container = document.getElementById('map');
+              var options = {
+                center : new kakao.maps.LatLng({{user_center.lat}}, {{user_center.lng}}), // user가 등록해놓은 위도, 경도 
+                //center : new kakao.maps.LatLng(37.480885919228776, 126.8821083975363), // 교육장
+                level : 3
+              };
+              var map = new kakao.maps.Map(container, options);
+
+              // 사용자 위치 기반 마커 표시하기
+              if (navigator.geolocation) {
+    
+                // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    
+                    var lat = position.coords.latitude, // 위도
+                        lon = position.coords.longitude; // 경도
+                    
+                    var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+                        message = '<div style="padding:5px;">여기에 계신가요?!</div>'; // 인포윈도우에 표시될 내용입니다
+                    
+                    // 마커와 인포윈도우를 표시합니다
+                    displayMarker(locPosition, message);
+                        
+                  });
+                
+              } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+                
+                var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),    
+                    message = 'geolocation을 사용할수 없어요..'
+                    
+                displayMarker(locPosition, message);
+              }
+
+              // 지도에 마커와 인포윈도우를 표시하는 함수입니다
+              function displayMarker(locPosition, message) {
+
+                // redMarker image setting
+                var imgSrc = '{% static "img/redmarker.png" %}',
+                imgSize = new kakao.maps.Size(30, 40),
+                imgOption = {offset: new kakao.maps.Point(15, 45)}
+
+                // redMarker image create
+                var redMarker = new kakao.maps.MarkerImage(imgSrc, imgSize, imgOption),
+                  redMarkerPosition = new kakao.maps.LatLng(locPosition.lat, locPosition.lon)
+
+                // 마커를 생성합니다
+                var marker = new kakao.maps.Marker({  
+                  map: map, 
+                  position: locPosition,
+                  image: redMarker // 마커이미지 설정
+                }); 
+    
+                var iwContent = message, // 인포윈도우에 표시할 내용
+                    iwRemoveable = true;
+
+                // 인포윈도우를 생성합니다
+                var infowindow = new kakao.maps.InfoWindow({
+                    content : iwContent,
+                    removable : iwRemoveable
+                });
+    
+                // 인포윈도우를 마커위에 표시합니다 
+                infowindow.open(map, marker);
+    
+                // 지도 중심좌표를 접속위치로 변경합니다
+                map.setCenter(locPosition);      
+              }    
+
+              $.ajax({
+                url: '/marker_data/',
+                data : {},
+                success: function(res){
+                  for(var i=0; i < res.length; i++){                    
+                    var marker = new kakao.maps.Marker({
+                      map: map,
+                      //position : new kakao.maps.LatLng(37.480885919228776, 126.8821083975363),
+                      position : new kakao.maps.LatLng(res[i].laundry_lat, res[i].laundry_lng), // TEST를 위해서 user_lat, user_lng으로 함 (laundry_lat, laundry_lng로 바꿔야함)
+                      title: res[i].laundry_name, 
+                    });
+                  }
+                }
+              });
+
+              
+            </script>
+
+            {% comment %} <img class="active" src="{% static '/img/700x570.png' %}" alt="Image Alternative text" title="Image Title" data-tab="SearchAreaTabs-1"/> {% endcomment %}
+            <img src="{% static '/img/700x570.png' %}" alt="Image Alternative text" title="Image Title" data-tab="SearchAreaTabs-2"/>
+            <img src="{% static '/img/700x570.png' %}" alt="Image Alternative text" title="Image Title" data-tab="SearchAreaTabs-3"/>
+            <img src="{% static '/img/700x570.png' %}" alt="Image Alternative text" title="Image Title" data-tab="SearchAreaTabs-4"/>
+            <img src="{% static '/img/700x570.png' %}" alt="Image Alternative text" title="Image Title" data-tab="SearchAreaTabs-5"/>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

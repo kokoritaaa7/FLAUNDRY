@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load split %}
+{% block contents %}
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous">
+
+	
+</script>
+<link href="/css/test/test.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+</head>
+<body>
+	<div class="container">
+		<table class="table table-bordered">
+			<thead>
+				<h1>글 수정</h1>
+			</thead>
+			<tbody>
+				<form id="viewForm" method="post">
+				{% csrf_token %}
+					<tr>
+						<th>제목</th>
+						<td><input type="text" value="{{board.brd_title}}"
+							id="brd_title" class="form-control" /></td>
+					</tr>
+					<tr>
+						<th>내용</th>
+						<td><textarea id="brd_content" class="form-control"
+								style="height: 200px;">{{board.brd_content}}</textarea></td>
+
+					</tr>
+                    <tr>
+                        <th>#해시태그</th>
+                        <td>
+                            <input type="text" placeholder="해시태그를 입력하세요." name="brd_tags" id="brd_tags" class="form-control" />
+                            <div name="hashDiv" id="hashDiv">
+								{% for tag in board.hash_tags|split:"," %}
+									<a class="btn" name="tagList" type="button">{{ tag }}</a>                         
+								{% endfor %}
+							</div>
+                        </td>
+                    </tr>
+					{% comment %} <tr>
+						<c:if test="${result.fileName ne null}">
+							<tr>
+								<td>다운로드</td>
+
+								<td><a href="fileDownload.do?fileName=${result.fileName}">
+										<input type="text" id="asd" value="${result.fileName}"
+										name="fileName" class="form-control" readonly />
+								</a>
+									<button id="asdasd" type="button" class="btn_previous">파일지우기</button>
+							</tr>
+						</c:if>
+					</tr>
+					<tr>
+						<th>첨부파일:</th>
+						<td><input type="file" id="uploadFile"></td>
+					</tr> {% endcomment %}
+					<tr>
+						<td colspan="2">
+							<button type="button" id="btn_previous" class="btn btn_previous" onclick="go_back()">이전</button>
+							<button id="btn_modify" type="button" class="btn btn_register">저장</button>
+						</td>
+					</tr>
+				</form>
+			</tbody>
+		</table>
+	</div>
+
+</body>
+<script type="text/javascript">
+
+	$(document).on('click', '#btn_modify', function(e) {
+		//데이터를 담아내는 부분
+		var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+		var brd_title = $("#brd_title").val().trim();
+        var brd_content = $("#brd_content").val().trim();
+
+		var tagsList = "";
+        $.each($("a[name='tagList']"), function(idx,item){
+           	tagsList += tagsList == "" ? $(item).text() : ","+$(item).text();
+        });
+
+		$.ajax({
+			url: "/board/board_modify_data/",
+			data: {
+				'board_id' : {{board.id}},
+				'brd_title':brd_title,
+				'brd_content':brd_content,
+				'brd_tags' :tagsList,
+				'csrfmiddlewaretoken':csrftoken              
+           	},
+			type : "POST",
+			success : function(res){
+				location.href='/board/{{board.id}}/';
+			}
+		})			
+	});
+	
+	$("#brd_tags").on("keyup", function (e) {
+    	if (e.which == 13 || e.which == 44) {
+        	fnAddTags();
+        }
+    });
+
+	//이전 클릭 시 testList로 이전
+	$("#btn_previous").click(
+        function javascript_onclick() {
+			location.href = '/board/{{board.id}}'
+    });
+
+	function fnAddTags() {
+        var buttonHtml = '';
+        buttonHtml += '<a class="btn" name="tagList" type="button">#'+$("#brd_tags").val()+'</a>';
+        $("#hashDiv").append(buttonHtml);
+        $("#brd_tags").val("");
+    }
+
+	$("#hashDiv a[name='tagList']").on("dblclick", function(){
+		$(this).remove();
+	});
+
+</script>
+{% endblock %}

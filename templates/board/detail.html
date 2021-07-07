@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load split %}
+{% block contents %}
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+
+<style>
+	#more_comment{
+    margin-bottom:200px;
+  }
+</style>
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+<link href="/css/test/test.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+</head>
+<body>
+	<div class="container">
+		<table class="table table-bordered">
+			<tbody>
+				<form action="updateTest.do" id="viewForm" method="post"
+					encType="multipart/form-data">
+					<tr>
+						<td><input type="text" value="{{board.brd_title}}"
+							id="brd_detail_title" class="form-control" readonly /></td>
+						<td><input name="testId" id="testId" type="text" value="{{board.brd_writer.user_nick}}"
+							class="form-control" readonly /></td>
+					</tr>
+					<tr>
+						<td colspan= "2"><textarea id="brd_detail_content"  class="form-control"
+								style="height: 200px;" readonly>{{board.brd_content}}</textarea></td>
+
+					</tr>
+					<tr>
+						<div name="hashDiv" id="hashDiv">
+						<td colspan="2">
+							{% for tag in board.hash_tags|split:"," %}
+								<a class="btn" name="tagList" type="button">{{ tag }}</a>                         
+							{% endfor %}
+						</td>
+						</div>
+					</tr>
+					<tr>
+						<!--글쓴이만 수정/삭제 버튼 활성화 구현-->
+						<td colspan="2">
+							<button id="btn_previous" type="button" class="btn_previous">목록</button>
+							{% if request.session.user_nick == board.brd_writer.user_nick %}
+							<button id="btn_delete" type="button" class="btn_previous">삭제</button>
+							<button id="btn_modify" type="button" class="btn_register">수정</button>
+							{% endif %}
+						</td>
+					</tr>
+				</form>
+			</tbody>
+		</table>
+
+		<!--댓글 div-->
+	<div class="card">
+    <div class="card-header">
+        <div class="col-md-12">
+            {% csrf_token %}
+			{% if request.session.user_nick%}
+            <div class="form-group row">
+                <textarea class="form-control" id="content_id" rows="3" placeholder="댓글을 입력해주세요."></textarea>
+            </div>
+            <div class="text-right" style="float:right">
+                <button id="comment_write" class="btn btn-sm">댓글달기</button>
+            </div>
+			{% endif %}
+        </div>
+        <hr>
+        <div id="more_comment">
+		{% for comment in board.comment_set.all %}
+			<div id ={{comment.id}}>
+				{% if request.session.user_id == comment.cmt_writer.user_id %}
+				<strong>{{comment.cmt_writer.user_nick}}<span>(글쓴이)</span></strong>
+				{% else %}
+				<strong>{{comment.cmt_writer.user_nick}}</strong>
+				{% endif %}
+				<span style="float:right">{{ comment.cmt_write_dt }}</span>
+				{% if request.session.user_id == comment.cmt_writer.user_id %}
+				<div>
+					<div style="white-space:pre-wrap; text-align:left;">{{ comment.cmt_content }}</div>
+					<div style="text-align: right;">
+							<a onclick="commentDelete({{comment.id}});">댓글삭제</a>
+					</div>
+                </div>
+				<hr>
+				{% else %}
+				<div>
+					<div style="white-space:pre-wrap; text-align:left;">{{ comment.cmt_content }}</div>
+                </div>
+				<hr>
+				{% endif %}
+				{% endfor %}
+            <input type="hidden" id="comment_writer" value={{request.user}}>
+            <div id="comment_list"></div>
+        </div>
+    </div>
+	</div>
+	
+</div>
+
+
+</body>
+<script type="text/javascript">
+	const testId = $("#testId").val();
+	var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
+	$(document).on('click', '#btn_modify', function(e) {
+		if (confirm("정말 수정하시겠습니까 ?") == true) {			
+			window.location='/board/modify_board/{{board.id}}/';
+		} 
+	});
+
+	$("#comment_write").on("click", function(){
+		var content = $("#content_id").val().trim();
+
+		$.ajax({
+			url:"/board/comment_create/{{board.id}}/",
+			type:"POST",
+			data:{
+				'content' : content,
+				'csrfmiddlewaretoken':csrftoken
+			},
+			success: function(res){
+				location.reload()
+			}
+		})
+		
+	});
+	
+	$(document).on('click', '#btn_delete', function(e) {
+		if (confirm("정말 삭제하시겠습니까 ?")) {
+			$.ajax({
+				url : "/board/delete_board/",
+				type : "POST",
+				data : {
+					'board_id' : {{board.id}},
+					'csrfmiddlewaretoken':csrftoken      
+				},
+				success : function(res){
+					location.href='/board/';
+				}
+			})
+		}
+	});
+	
+	$("#btn_previous").on("click", function() {
+		location.href='/board/';
+	});
+
+	function commentDelete(cmt_delete){
+		$.ajax({
+			url : '/board/comment_delete/',
+			type : "POST",
+			data : {
+				'cmt_id':cmt_delete,
+				'csrfmiddlewaretoken':csrftoken  
+			},
+			success :  function(res){
+				location.reload()
+			}
+		})
+	}
+
+</script>
+{% endblock %}
