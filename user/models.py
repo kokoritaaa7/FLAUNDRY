@@ -42,7 +42,7 @@ class Bookmark(models.Model):
 
 class Reviews(models.Model):
     '''리뷰 테이블'''
-    star = models.FloatField(default=0.0)
+    star = models.IntegerField(default=0)
     review_content = models.TextField()
     review_data = models.DateField()
     # FK - 사용자

@@ -1,3 +1,4 @@
+from laundry.models import Laundry
 from django import db
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
@@ -34,10 +35,13 @@ def change_pw(request):
     try:
         PasswordHasher().verify(db_data.user_pw, previous_pw)
         db_data.user_pw = PasswordHasher().hash(new_pw)
-        db_data.save()
-        result = {'previous': True }
+        
         if db_data.isTempPW:
             db_data.isTempPW = False
+
+        db_data.save()
+        result = {'previous': True }
+        
     except:
         result = {'previous': False}
 
@@ -369,7 +373,7 @@ def kakao(request):
 
 ### 카카오페이 결제창
 def kakaopay(request):
-    if request.method == "POST":
+    if request.method == "POST":        
         total_cost = request.POST.get('total_score')
         URL = 'https://kapi.kakao.com/v1/payment/ready'
         headers = {
@@ -386,7 +390,7 @@ def kakaopay(request):
             "tax_free_amount": "0",         # 구매 물품 비과세
             "approval_url" : "http://127.0.0.1:8000/user/approval",
             "cancel_url": "http://127.0.0.1:8000/board/main",
-            "fail_url": "http://127.0.0.1:8000/board/main",
+            "fail_url": "http://127.0.0.1:8000/board/main"
         }
 
         print("Header :" ,headers)
@@ -400,6 +404,9 @@ def kakaopay(request):
 
 ### 카카오페이 승인창
 def approval(request):
+    user_id = request.session['user_id']
+    user = User.objects.get(user_id = user_id)
+
     URL = 'https://kapi.kakao.com/v1/payment/approve'
     headers = {
         "Authorization": "KakaoAK " + "08f51e0e00d6be66ee734ab9f9ec6bea",
@@ -421,5 +428,6 @@ def approval(request):
     context = {
         'res': res,
         'amount': amount,
+        'user_name' : user.user_name
     }
-    return render(request, 'user/approval.html',context)
+    return render(request, 'user/approval.html', context)

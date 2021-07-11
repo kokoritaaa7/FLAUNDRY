@@ -23,10 +23,6 @@
     margin: 20px;
   }
 
-  a {
-    all: unset;
-  }
-
   a:link {
     text-decoration: none;
     color: #3f464d;
@@ -84,7 +80,7 @@
     background-color: skyblue;
   }
   #btn_margin {
-    margin-top: 4em;
+    margin-top: 1em;
   }
   /* 검색어 입력 */
   .theme-login-form-group .form-control {
@@ -183,13 +179,6 @@
             </table>
             <center>
               <div class="form-group theme-login-form-group">
-                <ul>
-                  <div class="btn_wrap" id="btn_margin">
-                    <input class="form-control" placeholder="검색어 입력" id="hashTagSearchInput" value="{{keyword}}">
-                    <a class="btn btn-sm btn-primary" onclick="serach()">검색</a>
-                  </div>
-                </ul>
-              </div>
               <ul class="pagination">
                 {% for i in pagination %}
                 <li>
@@ -197,6 +186,13 @@
                 </li>
                 {% endfor %}
               </ul>
+                <ul>
+                  <div class="btn_wrap" id="btn_margin">
+                    <input class="form-control" placeholder="검색어 입력" id="hashTagSearchInput" value="{{keyword}}">
+                    <a class="btn btn-sm btn-primary" onclick="serach()">검색</a>
+                  </div>
+                </ul>
+              </div>
             </center>
           </div>
         </div>

@@ -66,7 +66,7 @@
     <div class="card-header">
         <div class="col-md-12">
             {% csrf_token %}
-			{% if request.session.user_nick%}
+			{% if request.session.user_nick %}
             <div class="form-group row">
                 <textarea class="form-control" id="content_id" rows="3" placeholder="댓글을 입력해주세요."></textarea>
             </div>
@@ -79,7 +79,7 @@
         <div id="more_comment">
 		{% for comment in board.comment_set.all %}
 			<div id ={{comment.id}}>
-				{% if request.session.user_id == comment.cmt_writer.user_id %}
+				{% if board.brd_writer.user_id == comment.cmt_writer.user_id %}
 				<strong>{{comment.cmt_writer.user_nick}}<span>(글쓴이)</span></strong>
 				{% else %}
 				<strong>{{comment.cmt_writer.user_nick}}</strong>

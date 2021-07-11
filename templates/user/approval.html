@@ -8,7 +8,79 @@
 }
 </style>
 <!--카카오 결제 끝나고 나오는 화면-->
-<div class="maindiv">
+<div class="theme-page-section theme-page-section-xl theme-page-section-gray">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">
+            <div class="theme-payment-success">
+              <div class="theme-payment-success-header">
+                <i class="fa fa-check-circle theme-payment-success-header-icon"></i>
+                <h1 class="theme-payment-success-title">결제 완료</h1>
+                <p class="theme-payment-success-subtitle">We have emailed you the receipt.</p>
+              </div>
+              <div class="theme-payment-success-box">
+                <ul class="theme-payment-success-summary">
+                  <li>결제번호
+                    <span class="user_info">{{ res.partner_order_id }}</span>
+                  </li>
+                  <li>결제일시
+                    <span class="user_info">{{ res.approved_at }}</span>
+                  </li>
+                  <li>고객이름
+                    <span class="user_info">{{ user_name }}</span>
+                  </li>
+                  <li>구매처
+                    <span class="user_info">{{ laundry.laundry_name|default:'FLaundry'}}</span>
+                  </li>
+                  <li>결제수단
+                    <span class="user_info">카카오페이</span>
+                  </li>
+                  <li>주문내용
+                    <span class="user_info">{{ res.item_name }}</span>
+                  </li>
+                  <li >결제금액
+                    <span class="user_info">{{ amount }}원</span>
+                  </li>
+                </ul>
+                <p class="theme-payment-success-check-order">
+                  <center><a href="{% url 'board:main' %}">메인으로 돌아가기</a></center>
+                </p>
+              </div>
+              {% comment %} <ul class="theme-payment-success-actions">
+                <li>
+                  <a href="#">
+                    <i class="fa fa-file-pdf-o"></i>
+                    <p>PDF
+                      <br/>receipt
+                    </p>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="fa fa-print"></i>
+                    <p>Print
+                      <br/>receipt
+                    </p>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="fa fa-envelope-o"></i>
+                    <p>SMS
+                      <br/>receipt
+                    </p>
+                  </a>
+                </li>
+              </ul> {% endcomment %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let laundry_id = {{laundry.id}}
+    </script>
+{% comment %} <div class="maindiv">
   <div class="">
     <h2 class="title">결제 완료!</h2>
     <h3 class="user">주문자 정보</h3>
@@ -36,6 +108,6 @@
 
   </div>
 
-</div>
+</div> {% endcomment %}
 
 {% endblock %}

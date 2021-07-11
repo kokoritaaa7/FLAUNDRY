@@ -10,4 +10,6 @@ urlpatterns = [
     path('detail_page/<int:laundry_id>', views.detail_page, name='detail_page'),
     # path('index/', views.index, name ='index'),
     # path('<int:laundry_id>/', views.detail, name='detail'),
+
+    path('<int:laundry_id>/review/', views.review, name="review")
 ]

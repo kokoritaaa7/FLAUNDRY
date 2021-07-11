@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
 from django.forms.models import model_to_dict
@@ -271,9 +272,24 @@ def detail_page(request, laundry_id):
         'star' : star,
         'review_num' : review_num
     }
-   
 
     return render(request, 'laundry/detail_page.html', context)
+
+def review(request, laundry_id):
+    '''review 쓰기'''
+    star = request.POST.get('stars')
+    review_content = request.POST.get('review_content')
+    
+    user_id = request.session['user_id']
+    user = user_model.User.objects.get(user_id=user_id)
+
+    laundry = Laundry.objects.get(id=laundry_id)
+
+    review = user_model.Reviews(star=star, review_content=review_content, laundry=laundry, users=user, review_data=datetime.now())
+    review.save()
+
+    return redirect('laundry:detail_page', laundry_id)
+
 
 
 # 지도, 반경 ~Km내의 세탁소 거리계산 함수

@@ -14,6 +14,21 @@
     background-color: #F2DA01;
     margin-bottom : 10px
   }
+
+  /* 리뷰 작성 */
+  .col-md-9 .form-control {
+    display: inline-block;
+    position: relative;
+    height: 2.5em;
+    width: 30em;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    font-size: 12px;
+    border-color: #dedede;
+    margin-bottom: 2em;
+  }
+
 </style>
     <div class="theme-hero-area">
       <div class="theme-hero-area-bg-wrap">
@@ -255,8 +270,21 @@
                       <div class="col-md-3 ">
                         <h5 class="theme-item-page-details-section-title">리뷰</h5>
                       </div>
-                      <div class="col-md-9 ">
+                      <div class="col-md-9">
                         <div class="theme-reviews">
+                          <form action="{% url 'laundry:review' laundry.id %}" method="post">
+                            {% csrf_token %}
+                            <label for="stars">별점 선택:</label>
+                            <select name="stars" id="stars">
+                              <option value="5">5점</option>
+                              <option value="4">4점</option>
+                              <option value="3">3점</option>
+                              <option value="2">2점</option>
+                              <option value="1">1점</option>
+                            </select>
+                            <input class="form-control" placeholder="리뷰 작성" id="hashTagSearchInput" name="review_content">
+                            <button id="comment_write" class="btn btn-sm">리뷰 작성</button>
+                          </form>
                           <div class="theme-reviews-list">
                             {% if review %}
                               {% for r in review %}
@@ -264,9 +292,11 @@
                                   <div class="row" data-gutter="10">
                                     <div class="col-md-3 ">
                                       <div class="theme-reviews-item-info">
-                                          <img class="theme-reviews-item-avatar" src="{% static '/img/icon.png' %}" alt="Image Alternative text" title="Image Title"/>
-                                          <p class="theme-reviews-item-date">{{r.review_date}}</p>
+                                        <center>
+                                          <img class="theme-reviews-item-avatar" src="{% static '/img/icon.png' %}" alt="Image Alternative text" title="Image Title" style="width:50px"/>
+                                          <p class="theme-reviews-item-date">{{r.review_data}}</p>
                                           <p class="theme-reviews-item-author">{{r.users.user_nick}}</p>
+                                        </center>
                                       </div>
                                     </div>
                                     <div class="col-md-9 ">

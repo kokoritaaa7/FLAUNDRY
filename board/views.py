@@ -220,3 +220,7 @@ def contact(request):
         send_mail(ADMIN_MAIL, email, comment)
         return JsonResponse({'result':True})
     return redirect('board:qna')
+
+### 404 에러
+def error(request):
+    return render(request, '404.html')
