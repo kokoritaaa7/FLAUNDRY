@@ -1,3 +1,4 @@
+from django.db.models.aggregates import Sum
 from datetime import datetime, timezone
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
@@ -12,11 +13,13 @@ from django.shortcuts import get_object_or_404
 import pandas as pd
 import math
 from haversine import haversine
-from django.db.models import Q
+from django.db.models import Q, Count
+
+
 
 
 def laundryDB(request): 
-    data1 = pd.read_csv("laundry_data.csv", encoding="CP949")
+    data1 = pd.read_csv("laundry_data.csv", encoding="utf-8")
     data2 = pd.read_csv("세탁기 정보.csv", encoding="CP949")
     data3 = pd.read_csv("건조기 정보.csv", encoding="CP949")
     data4 = pd.read_csv("추가요금 정보.csv", encoding="CP949")
@@ -91,9 +94,10 @@ def search_map(request):
     try:
         user_id = request.session['user_id']
         keyword = request.GET.get('keyword', "")
+        check_list = request.POST.getlist('sel[]')
         # 검색어
         # keyword = request.GET['keyword']
-        keyword = request.GET.get('keyword','')
+        # keyword = request.GET.get('keyword','')
     except:
 
         return redirect('user:login')
@@ -105,9 +109,22 @@ def search_map(request):
                 'lat': user.user_lat,
                 'lng': user.user_lng
         }
-        
-        # 조회
         laundry_list = Laundry.objects.order_by('id')
+        machine_list = Machine.objects.values('laundry','machine_category', 'machine_type','basic_rate').order_by('laundry','machine_category','machine_type')
+        machine_list = machine_list.distinct()
+        review_list = Reviews.objects.values('laundry').annotate(Sum('star'),Count('star'))   # 별점 총 합, 총 갯수
+
+
+        #####       왼쪽 사이드바       #####
+        if len(check_list) != 0:
+            for check in check_list:
+                if check:
+                    machine_list = machine_list.filter(
+                        Q(machine_type__icontains=check)
+                    )
+
+        #####       오른쪽 사이드바     #####    
+        # 조회
         if keyword :
             laundry_list = laundry_list.filter(
                 Q(laundry_name__icontains=keyword) |
@@ -121,6 +138,7 @@ def search_map(request):
 
             ).distinct()
 
+        # DB 정보와 거리를 비교하여 가장 가까운 코인세탁소 찾기
         if laundry_list.count() != 0:
             min, i = 1000, 0
             start = (float(user.user_lat), float(user.user_lng))
@@ -137,27 +155,22 @@ def search_map(request):
             user_center['lat'] = result_laundry.laundry_lat
             user_center['lng'] = result_laundry.laundry_lng
 
-            # 리뷰 데이터 리턴
-            review_list = user_model.Reviews.objects.filter(laundry_id=i)
-            machine_list = Machine.objects.filter(laundry_id=i)
-
             # print(position)
             context = {
                 'laundry_list': laundry_list,
                 'user_center': user_center,
                 'keyword': keyword,
-                'name' : result_laundry.laundry_name
-                # 'review':review,
-                # 'price':price
+                'name' : result_laundry.laundry_name,
+                'review_list' : review_list,
+                'machine_list': machine_list
             }
         else : 
             context = {
                 'laundry_list': laundry_list,
                 'user_center': user_center,
-                'name' : user.user_nick
-                # 'keyword': keyword
-                # 'review':review,
-                # 'price':price
+                'name' : user.user_nick,
+                'review_list' : review_list,
+                'machine_list': machine_list
             }
 
 
@@ -182,6 +195,10 @@ def search_map2(request):
             'lng': user.user_lng
         }
         name = ''
+        machine_list = Machine.objects.values('laundry','machine_category', 'machine_type','basic_rate').order_by('laundry','machine_category','machine_type')
+        machine_list = machine_list.distinct()
+        review_list = Reviews.objects.values('laundry').annotate(Sum('star'),Count('star'))   # 별점 총 합, 총 갯수
+        
 
         RestAPIKey = "e10fc0ca482b5375d98fe727a94ba06b"
         kakao = kakaoAPI.KakaoLocalAPI(RestAPIKey)
@@ -212,19 +229,31 @@ def search_map2(request):
                 user_center['lat'] = document[i]['y']
                 user_center['lng'] = document[i]['x']
                 name = document[i]['place_name']
-                
-                
+                param = document[i]['address_name']
+                param = param[:7]
                 # print("키워드 좌표", user_center['lat'], user_center['lng'])
         
         laundry_list = Laundry.objects.order_by('id')
+        if param :
+            laundry_list = laundry_list.filter(
+                Q(laundry_name__icontains=param) |
+                Q(laundry_address__icontains=param) |
+                Q(laundry_road__icontains=param) |
+                Q(laundry_lat__icontains=param) |
+                Q(laundry_lng__icontains=param) |
+                Q(laundry_tel__icontains=param) |
+                Q(washer_cnt__icontains=param) |
+                Q(dryer_cnt__icontains=param)
+
+            ).distinct()
 
         # print(position)
         context = {
             'laundry_list': laundry_list,
             'user_center': user_center,
-            'name' : name
-            # 'review':review,
-            # 'price':price
+            'name' : name,
+            'review_list':review_list,
+            'machine_list': machine_list
         }
 
     return render(request, 'laundry/search_map.html', context)
